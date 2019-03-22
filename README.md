@@ -21,3 +21,5 @@ For ease of use, use the folder Syncro uses for scripts:
 - Give it a Menu Title of something, such as "New Support Ticket"
 ~~- In the CMD field, put this:  `powershell -File C:\ProgramData\Syncro\live\scripts\support_form.bat`~~
 - In the CMD field, put this:  `powershell -File C:\ProgramData\Syncro\live\scripts\support_form.ps1`
+
+This will also automatically take a screenshot (requires a few lines to be uncommented), but will only upload to the Asset, **NOT** the ticket.  Uploading files to the ticket from Syncro's Powershell module is currently not available.

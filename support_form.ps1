@@ -4,38 +4,17 @@
 ################################################################################################################################################
 
 ################################################################################################################################################
-#############  Currently, this only works if you save this script to the local machine as .ps1 (ex. C:\itfolder\support_form.ps1), #############
-#############  make a .bat file with the same name, in the same folder (ex. C:\itfolder\support_form.bat), with this in            #############
-#############  the .bat file [@echo off powershell.exe -Command "& '%~dpn0.ps1'"] (Keep the quotes,don't use the brackets)         #############
+#############  - Manually place this script on your user's PC, under C:\ProgramData\Syncro\live\scripts                            #############
+#############  - OR , Run once on each computer (alternatively, add to Setup Scripts in your policy, "If Never Run"                #############
+#############  - This will download this script into C:\ProgramData\Syncro\live\scripts                                            #############
+#############  - Add a new System Tray CMD option, "powershell -File C:\ProgramData\Syncro\live\scripts\support_form.ps1" (without the quotes)##
+#############  - Give it a menu title, something like "Create Support Ticket"                                                      #############
+#############  - From the systray menu, click your new "Create Support Ticket" option.                                             #############
 ################################################################################################################################################
 
 Add-Type -AssemblyName WindowsBase, PresentationFramework, PresentationCore
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
-
-Import-Module $Env:SyncroModule -DisableNameChecking
-$hostname = "$env:computername"
-$date = (Get-Date)
-
-
-######################  Enter Your Own Values below  ###########################
-
-
-## Your Syncro sub-domain prefix
-$subdomain = 'YOUR_SUBDOMAIN_HERE'
-
-## Path to temporarily save your screenshot to
-$screenShotPath = 'C:\temp\Screenshots'
-
-## Title of your form
-$formTitle = 'IT Support Request Form'
-
-## Uses path to Syncro's default icon.  Change to point to your own icon
-$Icon = [system.drawing.icon]::ExtractAssociatedIcon('C:\ProgramData\Syncro\Images\logo.ico')
-
-## Alert Category if a user cancels a ticket
-$cancelledTicket = 'Ticket Cancelled'
-
 
 ############## Automatically Grab User's First and Last Name ###################
 
@@ -47,9 +26,15 @@ $currentUser = ([adsi]"WinNT://$dom/$usr,user").fullname
 
 ########################  Form Settings  ############################
 
+Import-Module $Env:SyncroModule -DisableNameChecking
+
+$hostname = "$env:computername"
+$date = (Get-Date)
+
+$formTitle = "Support Request for $currentUser"
 
 $form = New-Object System.Windows.Forms.Form
-$form.Icon = $Icon
+$form.Icon = 'C:\ProgramData\Syncro\Images\logo.ico'
 $form.Text = "$formTitle"
 $form.Size = New-Object System.Drawing.Size(475,475)
 $form.StartPosition = 'CenterScreen'
@@ -219,7 +204,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
         
         ## Take Screenshot
         Get-ScreenCapture -FullFileName "$screenShotPath\screenshot.jpg"
-        #Upload-File -Subdomain "$subdomain" -FilePath "$screenShotPath\screenshot.jpg"
+        Upload-File -Subdomain "$subdomain" -FilePath "$screenShotPath\screenshot.jpg"
 
         ## Create ticket
         $ticketOutput = Create-Syncro-Ticket -Subdomain "$subdomain" -Subject "$subjectEntry - $emailEntry" -IssueType "Submission" -Status "New"
@@ -238,9 +223,12 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     }
 else 
     {
-        Write-Host $cancelledTicket
+        Write-Host 'Ticket Cancelled'
 
         ## Optionally write cancelled ticket event to Asset as Alert
-        ## Uncomment next line to activate
-        # Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
+        ## Comment next line to de-activate
+         Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
+
+        $form.close()
     }
+exit

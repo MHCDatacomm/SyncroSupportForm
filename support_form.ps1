@@ -33,6 +33,8 @@ $date = (Get-Date)
 
 $formTitle = "Support Request for $currentUser"
 
+$screenShotPath = 'C:\ProgramData\Syncro\live\scripts'
+
 $form = New-Object System.Windows.Forms.Form
 $form.Icon = 'C:\ProgramData\Syncro\Images\logo.ico'
 $form.Text = "$formTitle"
@@ -228,7 +230,4 @@ else
         ## Optionally write cancelled ticket event to Asset as Alert
         ## Comment next line to de-activate
          Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
-
-        $form.close()
     }
-exit

@@ -28,7 +28,7 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     $hostname = "$env:computername"
 
     ## Main Path to Syncro folder
-    $syncroFolderPath = "env:SYSTEMDRIVE/ProgramData/Syncro"
+    $syncroFolderPath = "C:/ProgramData/Syncro"
 
     ## Screenshot Path
     $screenshotPath = "$syncroFolderPath/scripts"

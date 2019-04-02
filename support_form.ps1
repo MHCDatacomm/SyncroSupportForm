@@ -12,31 +12,50 @@
 #############  - From the systray menu, click your new "Create Support Ticket" option.                                             #############
 ################################################################################################################################################
 
+########################  Load Modules and Stuff  ###################
 Add-Type -AssemblyName WindowsBase, PresentationFramework, PresentationCore
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-############## Automatically Grab User's First and Last Name ###################
+Import-Module $Env:SyncroModule -DisableNameChecking
 
 
-$dom = $env:userdomain
-$usr = $env:username
-$currentUser = ([adsi]"WinNT://$dom/$usr,user").fullname
+################### Apply settings based on OS ######################
 
+if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction SilentlyContinue)) {
+
+    ## Devices Hostname
+    $hostname = "$env:computername"
+
+    ## Main Path to Syncro folder
+    $syncroFolderPath = "env:SYSTEMDRIVE/ProgramData/Syncro"
+
+    ## Screenshot Path
+    $screenshotPath = "$syncroFolderPath/scripts"
+
+    ## Grab current logged in user's Name
+    $dom = $env:userdomain
+    $usr = $env:username
+    $currentUser = ([adsi]"WinNT://$dom/$usr,user").fullname
+
+    ## Your Company Name
+    $company = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Wow6432Node\RepairTech\Syncro').shop_name
+}
+else {
+    ## Will need to add more for Linux/Mac functionality later
+    # $syncroFolderPath = "./"
+}
 
 ########################  Form Settings  ############################
 
-Import-Module $Env:SyncroModule -DisableNameChecking
-
-$hostname = "$env:computername"
+## Current Date
 $date = (Get-Date)
 
-$formTitle = "Support Request for $currentUser"
-
-$screenShotPath = 'C:\ProgramData\Syncro\live\scripts'
+## Form Window Title
+$formTitle = "Support Request for $company"
 
 $form = New-Object System.Windows.Forms.Form
-$form.Icon = 'C:\ProgramData\Syncro\Images\logo.ico'
+$form.Icon = "$syncroFolderPath/Images/logo.ico"
 $form.Text = "$formTitle"
 $form.Size = New-Object System.Drawing.Size(475,475)
 $form.StartPosition = 'CenterScreen'
@@ -44,9 +63,7 @@ $form.ControlBox = $False
 $form.BackColor = 'Ivory'
 $form.Font = [System.Drawing.Font]::new("Roboto", 10)
 
-
 ########################  Add Buttons  ##############################
-
 
 $buttonPanel = New-Object Windows.Forms.Panel  
     $buttonPanel.Size = New-Object Drawing.Size @(350,40) 
@@ -81,9 +98,7 @@ $form.Controls.Add($buttonPanel)
 $form.AcceptButton = $okButton          # ENTER = Ok 
 $form.CancelButton = $cancelButton      # ESCAPE = Cancel
 
-
 ##############################  Labels  ##############################
-
 
 $labelHost = New-Object System.Windows.Forms.Label
 $labelHost.Location = New-Object System.Drawing.Point(10,20)
@@ -122,9 +137,7 @@ $labelEmail.Text = 'Email'
 $labelEmail.Font = [System.Drawing.Font]::new("Roboto", 10, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelEmail)
 
-
 ########################  Input Fields  ########################
-
 
 $textHost = New-Object System.Windows.Forms.TextBox
 $textHost.Location = New-Object System.Drawing.Point(120,20)
@@ -159,9 +172,7 @@ $textEmail.Location = New-Object System.Drawing.Point(120,240)
 $textEmail.Size = New-Object System.Drawing.Size(330,20)
 $form.Controls.Add($textEmail)
 
-
 ##################  Form Field Validation  ######################
-
 
 $textSubject.add_TextChanged -and $textDesc.add_TextChanged({ Checkfortext })
 
@@ -203,13 +214,9 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     {
         #####################  CURRENTLY ONLY ABLE TO UPLOAD TO ASSET.  #####################
         ########  UNCOMMENT 'Upload-File' TO ENABLE UPLOADING SCREENSHOT TO ASSET  ##########
-        
-        ## Take Screenshot
-        Get-ScreenCapture -FullFileName "$screenShotPath\screenshot.jpg"
-        Upload-File -Subdomain "$subdomain" -FilePath "$screenShotPath\screenshot.jpg"
 
         ## Create ticket
-        $ticketOutput = Create-Syncro-Ticket -Subdomain "$subdomain" -Subject "$subjectEntry - $emailEntry" -IssueType "Submission" -Status "New"
+        $ticketOutput = Create-Syncro-Ticket -Subdomain "$Subdomain" -Subject "$subjectEntry - $emailEntry" -IssueType "Submission" -Status "New"
 
         ## Write the output of the ticket to console, assign it a varaible
         Write-Host $ticketOutput
@@ -217,11 +224,17 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
         ## Grab ticket number from the output
         $ticketNumber = $ticketOutput.ticket.number
 
+        ## Take Screenshot
+        $screenshotName = "screenshot_$ticketNumber_$date.jpg"
+
+        Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
+        Upload-File -Subdomain "$Subdomain" -FilePath "$screenshotPath/$screenshotName"
+
         ## Add a ticket comment
-        Create-Syncro-Ticket-Comment -Subdomain "$subdomain" -TicketIdOrNumber $ticketNumber -Subject "Issue" -Body "Submitted by $nameEntry $emailEntry - $descEntry" -Hidden $False
+        Create-Syncro-Ticket-Comment -Subdomain "$Subdomain" -TicketIdOrNumber $ticketNumber -Subject "Issue" -Body "Submitted by $nameEntry $emailEntry - $descEntry" -Hidden $False
         
         ## Delete screenshot
-        Remove-Item "$screenShotPath\screenshot.jpg"
+        Remove-Item "$screenshotPath/$screenshotName"
     }
 else 
     {
@@ -231,3 +244,4 @@ else
         ## Comment next line to de-activate
          Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
     }
+exit

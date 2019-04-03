@@ -31,7 +31,7 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     $syncroFolderPath = "C:/ProgramData/Syncro"
 
     ## Screenshot Path
-    $screenshotPath = "$syncroFolderPath/scripts"
+    $screenshotPath = "$syncroFolderPath/live/scripts"
 
     ## Grab current logged in user's Name
     $dom = $env:userdomain
@@ -225,7 +225,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
         $ticketNumber = $ticketOutput.ticket.number
 
         ## Take Screenshot
-        $screenshotName = "screenshot_$ticketNumber_$date.jpg"
+        $screenshotName = "screenshot-$ticketNumber-$date.jpg"
 
         Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
         Upload-File -Subdomain "$Subdomain" -FilePath "$screenshotPath/$screenshotName"

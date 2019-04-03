@@ -2,15 +2,16 @@
 #################################  Made with instsructional assistance from Dan Stolts "ITProGuru"  ############################################
 ### https://channel9.msdn.com/Series/GuruPowerShell/GUI-Form-Using-PowerShell-Add-Panel-Label-Edit-box-Combo-Box-List-Box-CheckBox-and-More  ###
 ################################################################################################################################################
-
-################################################################################################################################################
-#############  - Manually place this script on your user's PC, under C:\ProgramData\Syncro\live\scripts                            #############
-#############  - OR , Run once on each computer (alternatively, add to Setup Scripts in your policy, "If Never Run"                #############
-#############  - This will download this script into C:\ProgramData\Syncro\live\scripts                                            #############
-#############  - Add a new System Tray CMD option, "powershell -File C:\ProgramData\Syncro\live\scripts\support_form.ps1" (without the quotes)##
-#############  - Give it a menu title, something like "Create Support Ticket"                                                      #############
-#############  - From the systray menu, click your new "Create Support Ticket" option.                                             #############
-################################################################################################################################################
+<#
+- Create new "CMD" menu item under Device System Tray Menu in your Policy
+- Give it a title (I used 'New Support Ticket')
+- Option 1 - Automated - Insert this into the CMD line, replacing YOUR_DOMAIN_HERE with your own Syncro subdomain:
+powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE"; (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MHCDatacomm/SyncroSupportForm/master/support_form.ps1','C:\ProgramData\Syncro\live\scripts\support_form.ps1');C:\ProgramData\Syncro\live\scripts\support_form.ps1"
+See here for screenshot https://prnt.sc/n6z0w3
+-- This will automatically download the script from this repo each time the menu open is clicked. I suggest hosting the script on your own server or repo, as this is in development.
+- Option 2 - Manual - Copy this script into the C:\ProgramData\Syncro\live\scripts folder, then insert this into the CMD line of the system tray menu option:
+powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE";C:\ProgramData\Syncro\live\scripts\support_form.ps1"
+#>
 
 ########################  Load Modules and Stuff  ###################
 Add-Type -AssemblyName WindowsBase, PresentationFramework, PresentationCore

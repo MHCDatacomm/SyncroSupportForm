@@ -9,7 +9,7 @@ https://channel9.msdn.com/Series/GuruPowerShell/GUI-Form-Using-PowerShell-Add-Pa
 This script must exist on each end-user's desktop.  I've set it to automatically be located in Syncro's default script path: `C:\ProgramData\Syncro\live\scripts`
 
 The script will automatically do the following:
-- Pulls in the logged-in user's frist and last name, and populates it in the "Name" field
+- Pulls in the logged-in user's first and last name, and populates it in the "Name" field
 - Makes the "Subject" and "Description" fields *required*
 - Takes a screenshot and posts to the ASSET, formated as `screenshot_ticket#_time/date.jpg` (posting to a Ticket isn't supported in the SyncroModule...yet)
 - Deletes screenshot once form is submitted

@@ -28,7 +28,7 @@ The script will automatically do the following:
 `powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE"; (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MHCDatacomm/SyncroSupportForm/master/support_form.ps1','C:\ProgramData\Syncro\live\scripts\support_form.ps1');C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
 
 [Note: This will automatically download the script from this repo each time the menu open is clicked.  You can also replace the URL with one of your own if you'd like to host the script on your own server or repo. Click here for screenshot https://prnt.sc/n6z0w3 ]
-- Option 2 - *Manual* - Copy this script into the `C:\ProgramData\Syncro\live\scripts` folder, then insert this into the CMD line of the system tray menu option:
+- Option 2 - *Manual* - Copy the support_form.ps1 script into your end-user's `C:\ProgramData\Syncro\live\scripts` folder, then insert this into the CMD line of the system tray menu option:
 
 `powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE";C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
 

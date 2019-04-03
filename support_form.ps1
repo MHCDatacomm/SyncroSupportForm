@@ -48,13 +48,6 @@ else {
 
 ########################  Form Settings  ############################
 
-## Current Date
-$date = Get-Date -format "yyyyMMdd"
-
-## Take Screenshot
-$screenshotName = "screenshot-$ticketNumber-$date.jpg"
-Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
-
 ## Form Window Title
 $formTitle = "Support Request for $company"
 
@@ -227,12 +220,21 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 
         ## Grab ticket number from the output
         $ticketNumber = $ticketOutput.ticket.number
-	
+    
+        ## Take Screenshot
+        $date = Get-Date -f yyyy-MM-dd
+        $screenshotName = "scrnsht-ticket $ticketNumber-$date.jpg"
+        Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
+
         ## Upload Screenshot
         Upload-File -Subdomain "$Subdomain" -FilePath "$screenshotPath/$screenshotName"
 
         ## Add a ticket comment
-        Create-Syncro-Ticket-Comment -Subdomain "$Subdomain" -TicketIdOrNumber $ticketNumber -Subject "Issue" -Body "Submitted by $nameEntry $emailEntry - $descEntry" -Hidden $False
+        Create-Syncro-Ticket-Comment -Subdomain "$Subdomain" -TicketIdOrNumber $ticketNumber -Subject "Issue" -Body "Submitted by $nameEntry $emailEntry - Check the asset $hostname for screenshot - $descEntry" -Hidden $False
+         
+        ## Delete screenshot
+        Remove-Item "$screenshotPath/$screenshotName"
+
     }
 else 
     {
@@ -242,7 +244,5 @@ else
         ## Comment next line to de-activate
          Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
     }
-    
-## Delete screenshot
-Remove-Item "$screenshotPath/$screenshotName"
+
 exit

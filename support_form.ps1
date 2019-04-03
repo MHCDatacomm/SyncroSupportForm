@@ -29,7 +29,7 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
 
     ## Main Path to Syncro folder
     $syncroFolderPath = "C:/ProgramData/Syncro"
-
+    
     ## Screenshot Path
     $screenshotPath = "$syncroFolderPath/live/scripts"
 
@@ -50,6 +50,10 @@ else {
 
 ## Current Date
 $date = (Get-Date)
+
+## Take Screenshot
+$screenshotName = "screenshot-$ticketNumber-$date.jpg"
+Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
 
 ## Form Window Title
 $formTitle = "Support Request for $company"
@@ -223,18 +227,12 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 
         ## Grab ticket number from the output
         $ticketNumber = $ticketOutput.ticket.number
-
-        ## Take Screenshot
-        $screenshotName = "screenshot-$ticketNumber-$date.jpg"
-
-        Get-ScreenCapture -FullFileName "$screenshotPath/$screenshotName"
+	
+        ## Upload Screenshot
         Upload-File -Subdomain "$Subdomain" -FilePath "$screenshotPath/$screenshotName"
 
         ## Add a ticket comment
         Create-Syncro-Ticket-Comment -Subdomain "$Subdomain" -TicketIdOrNumber $ticketNumber -Subject "Issue" -Body "Submitted by $nameEntry $emailEntry - $descEntry" -Hidden $False
-        
-        ## Delete screenshot
-        Remove-Item "$screenshotPath/$screenshotName"
     }
 else 
     {
@@ -244,4 +242,7 @@ else
         ## Comment next line to de-activate
          Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
     }
+    
+## Delete screenshot
+Remove-Item "$screenshotPath/$screenshotName"
 exit

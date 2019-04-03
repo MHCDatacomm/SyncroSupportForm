@@ -49,7 +49,7 @@ else {
 ########################  Form Settings  ############################
 
 ## Current Date
-$date = (Get-Date)
+$date = Get-Date -format "yyyyMMdd"
 
 ## Take Screenshot
 $screenshotName = "screenshot-$ticketNumber-$date.jpg"

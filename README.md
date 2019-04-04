@@ -25,12 +25,12 @@ The script will automatically do the following:
 - Give it a title (I used 'New Support Ticket')
 - Option 1 - *Automated* - Insert this into the CMD line, replacing YOUR_DOMAIN_HERE with your own Syncro subdomain:
 
-`powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE"; (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MHCDatacomm/SyncroSupportForm/master/support_form.ps1','C:\ProgramData\Syncro\live\scripts\support_form.ps1');C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
+`powershell -ExecutionPolicy Bypass "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE"; (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MHCDatacomm/SyncroSupportForm/master/support_form.ps1','C:\ProgramData\Syncro\live\scripts\support_form.ps1');C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
 
 [Note: This will automatically download the script from this repo each time the menu open is clicked.  You can also replace the URL with one of your own if you'd like to host the script on your own server or repo. Click here for screenshot https://prnt.sc/n6z0w3 ]
 - Option 2 - *Manual* - Copy the support_form.ps1 script into your end-user's `C:\ProgramData\Syncro\live\scripts` folder, then insert this into the CMD line of the system tray menu option:
 
-`powershell -command "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE";C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
+`powershell -ExecutionPolicy Bypass "Set-Variable -Name "subdomain" -Value "YOUR_DOMAIN_HERE";C:\ProgramData\Syncro\live\scripts\support_form.ps1"`
 
 **Future Plans**
 - Make "Take Screenshot" and "Upload File" buttons, so the user has a choice

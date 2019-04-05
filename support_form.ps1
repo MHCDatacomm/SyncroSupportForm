@@ -43,16 +43,23 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     $company = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Wow6432Node\RepairTech\Syncro').shop_name
     
     ## Create shortcut on 'Public' Desktop if you use the -shortcut switch
-    $Shell = New-Object -ComObject WScript.Shell
-    $desktopShortcut = $Shell.CreateShortcut($env:PUBLIC + "\Desktop\Request IT Support.lnk")
-    $desktopShortcut.TargetPath = '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
-    $desktopShortcut.Arguments = '-ExecutionPolicy Bypass -windowstyle hidden "Set-Variable -Value "' + $subdomain + '' + '";' + $screenshotPath + '/support_form.ps1"'
-    $desktopShortcut.WorkingDirectory = "$screenshotPath"
-    $desktopShortcut.WindowStyle = 1
-    $desktopShortcut.Hotkey = "CTRL+SHIFT+Z"
-    $desktopShortcut.IconLocation = "$syncroFolderPath/Images/logo.ico, 0"
-    $desktopShortcut.Description = "Request IT Support"
-    $desktopShortcut.Save()
+    if (Test-Path "$env:PUBLIC\Desktop\Request IT Support.lnk") {
+	Write-Host Shortcut Exists
+    }
+    else {
+    	Write-Host Creating shortcut
+
+    	$Shell = New-Object -ComObject WScript.Shell
+    	$desktopShortcut = $Shell.CreateShortcut($env:PUBLIC + "\Desktop\Request IT Support.lnk")
+    	$desktopShortcut.TargetPath = '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
+    	$desktopShortcut.Arguments = '-ExecutionPolicy Bypass -windowstyle hidden "Set-Variable -Name "subdomain" -Value "' + $subdomain + '' + '";' + $screenshotPath + '/support_form.ps1"'
+    	$desktopShortcut.WorkingDirectory = "$screenshotPath"
+    	$desktopShortcut.WindowStyle = 1
+	$desktopShortcut.Hotkey = "CTRL+SHIFT+Z"
+    	$desktopShortcut.IconLocation = "$syncroFolderPath/Images/logo.ico, 0"
+    	$desktopShortcut.Description = "Request IT Support"
+    	$desktopShortcut.Save()
+    }
 }
 else {
     ## Will need to add more for Linux/Mac functionality later

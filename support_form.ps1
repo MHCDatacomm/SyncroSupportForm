@@ -33,6 +33,9 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     
     ## Screenshot Path
     $screenshotPath = "$syncroFolderPath/live/scripts"
+    
+    ## Screenshot Disclaimer
+    $screenshotDisclaimer = "Note - A screenshot will be added to your ticket to assist with troubleshooting.  Please minimize any sensitive information before clicking Submit."
 
     ## Grab current logged in user's Name
     $dom = $env:userdomain
@@ -41,6 +44,36 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
 
     ## Your Company Name
     $company = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Wow6432Node\RepairTech\Syncro').shop_name
+    
+    ## Create shortcut on 'Public' Desktop if you use the -shortcut switch
+    if (Test-Path "$env:USERPROFILE\Desktop\Support Request.lnk") {
+    	Remove-Item -Path "$env:USERPROFILE\Desktop\Support Request.lnk"
+	Write-Host Removing Old Shortcut
+    }
+    
+    if (Test-Path "$env:PUBLIC\Desktop\Support Request.lnk") {
+    	Remove-Item -Path "$env:PUBLIC\Desktop\Support Request.lnk"
+	Write-Host Removing Old Shortcut
+    }
+    
+    if (Test-Path "$env:PUBLIC\Desktop\Request IT Support.lnk") {
+	Write-Host Shortcut Exists
+    }
+    
+    else {
+    	Write-Host Creating shortcut
+
+    	$Shell = New-Object -ComObject WScript.Shell
+    	$desktopShortcut = $Shell.CreateShortcut($env:PUBLIC + "\Desktop\Request IT Support.lnk")
+    	$desktopShortcut.TargetPath = '%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe'
+    	$desktopShortcut.Arguments = '-ExecutionPolicy Bypass -windowstyle hidden "Set-Variable -Name "subdomain" -Value "' + $subdomain + '' + '";' + $screenshotPath + '/support_form.ps1"'
+    	$desktopShortcut.WorkingDirectory = "$screenshotPath"
+    	$desktopShortcut.WindowStyle = 1
+	$desktopShortcut.Hotkey = "CTRL+SHIFT+Z"
+    	$desktopShortcut.IconLocation = "$syncroFolderPath/Images/logo.ico, 0"
+    	$desktopShortcut.Description = "Request IT Support"
+    	$desktopShortcut.Save()
+    }
 }
 else {
     ## Will need to add more for Linux/Mac functionality later
@@ -134,6 +167,12 @@ $labelEmail.Size = New-Object System.Drawing.Size(90,40)
 $labelEmail.Text = 'Email'
 $labelEmail.Font = [System.Drawing.Font]::new("Roboto", 10, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelEmail)
+
+$labelDisclaimer = New-Object System.Windows.Forms.Label
+$labelDisclaimer.Location = New-Object System.Drawing.Point(10,280)
+$labelDisclaimer.Size = New-Object System.Drawing.Size(420,40)
+$labelDisclaimer.Text = "$screenshotDisclaimer"
+$form.Controls.Add($labelDisclaimer)
 
 ########################  Input Fields  ########################
 

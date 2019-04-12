@@ -46,6 +46,11 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     if (Test-Path "$env:PUBLIC\Desktop\Request IT Support.lnk") {
 	Write-Host Shortcut Exists
     }
+    
+    elseif (Test-Path "$env:PUBLIC\Desktop\Support Request.lnk") {
+    	Remove-Item -Path "$env:PUBLIC\Desktop\Support Request.lnk"
+    }
+    
     else {
     	Write-Host Creating shortcut
 

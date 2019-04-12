@@ -172,7 +172,6 @@ $labelDisclaimer = New-Object System.Windows.Forms.Label
 $labelDisclaimer.Location = New-Object System.Drawing.Point(10,280)
 $labelDisclaimer.Size = New-Object System.Drawing.Size(420,40)
 $labelDisclaimer.Text = "$screenshotDisclaimer"
-$labelDisclaimer.Font = [System.Drawing.Font]::new("Roboto", 10, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelDisclaimer)
 
 ########################  Input Fields  ########################

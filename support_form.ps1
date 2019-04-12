@@ -43,7 +43,7 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     $company = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Wow6432Node\RepairTech\Syncro').shop_name
     
     ## Create shortcut on 'Public' Desktop if you use the -shortcut switch
-    if (Test-Path "$env:PUBLIC\Desktop\Support Request.lnk") {
+    if (Test-Path "$env:USERPROFILE\Desktop\Support Request.lnk") {
     	Remove-Item -Path "$env:PUBLIC\Desktop\Support Request.lnk"
 	Write-Host Removing Old Shortcut
     }

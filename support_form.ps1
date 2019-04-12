@@ -170,7 +170,7 @@ $form.Controls.Add($labelEmail)
 
 $labelDisclaimer = New-Object System.Windows.Forms.Label
 $labelDisclaimer.Location = New-Object System.Drawing.Point(10,280)
-$labelDisclaimer.Size = New-Object System.Drawing.Size(420,40)
+$labelDisclaimer.Size = New-Object System.Drawing.Size(420,50)
 $labelDisclaimer.Text = "$screenshotDisclaimer"
 $form.Controls.Add($labelDisclaimer)
 

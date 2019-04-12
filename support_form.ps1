@@ -200,6 +200,11 @@ $textEmail.Location = New-Object System.Drawing.Point(120,240)
 $textEmail.Size = New-Object System.Drawing.Size(330,20)
 $form.Controls.Add($textEmail)
 
+$screenDisclaimer = New-Object System.Windows.Forms.TextBox
+$screenDisclaimer.Location = New-Object System.Drawing.Point(120,280)
+$screenDisclaimer.Size = New-Object System.Drawing.Size(330,40)
+$form.Controls.Add(A screenshot will be added to your ticket.  Please minimize any sensitive information before clicking Submit.)
+
 ##################  Form Field Validation  ######################
 
 $textSubject.add_TextChanged -and $textDesc.add_TextChanged({ Checkfortext })

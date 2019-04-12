@@ -33,6 +33,9 @@ if ([System.Boolean](Get-CimInstance -ClassName Win32_OperatingSystem -ErrorActi
     
     ## Screenshot Path
     $screenshotPath = "$syncroFolderPath/live/scripts"
+    
+    ## Screenshot Disclaimer
+    $screenshotDisclaimer = "Note - A screenshot will be added to your ticket to assist with troubleshooting.  Please minimize any sensitive information before clicking Submit."
 
     ## Grab current logged in user's Name
     $dom = $env:userdomain
@@ -165,6 +168,13 @@ $labelEmail.Text = 'Email'
 $labelEmail.Font = [System.Drawing.Font]::new("Roboto", 10, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelEmail)
 
+$labelDisclaimer = New-Object System.Windows.Forms.Label
+$labelDisclaimer.Location = New-Object System.Drawing.Point(10,280)
+$labelDisclaimer.Size = New-Object System.Drawing.Size(90,40)
+$labelDisclaimer.Text = "$screenshotDisclaimer"
+$labelEmail.Font = [System.Drawing.Font]::new("Roboto", 10, [System.Drawing.FontStyle]::Bold)
+$form.Controls.Add($labelDisclaimer)
+
 ########################  Input Fields  ########################
 
 $textHost = New-Object System.Windows.Forms.TextBox
@@ -199,11 +209,6 @@ $textEmail = New-Object System.Windows.Forms.TextBox
 $textEmail.Location = New-Object System.Drawing.Point(120,240)
 $textEmail.Size = New-Object System.Drawing.Size(330,20)
 $form.Controls.Add($textEmail)
-
-$screenDisclaimer = New-Object System.Windows.Forms.TextBox
-$screenDisclaimer.Location = New-Object System.Drawing.Point(120,280)
-$screenDisclaimer.Size = New-Object System.Drawing.Size(330,40)
-$form.Controls.Add(A screenshot will be added to your ticket.  Please minimize any sensitive information before clicking Submit.)
 
 ##################  Form Field Validation  ######################
 

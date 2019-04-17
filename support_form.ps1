@@ -279,7 +279,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 else 
     {
         Write-Host 'Ticket Cancelled'
-
+	$cancelledTicket = 'Ticket Cancelled'
         ## Optionally write cancelled ticket event to Asset as Alert
         ## Comment next line to de-activate
          Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"

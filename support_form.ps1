@@ -170,7 +170,7 @@ $form.Controls.Add($labelEmail)
 
 $labelDisclaimer = New-Object System.Windows.Forms.Label
 $labelDisclaimer.Location = New-Object System.Drawing.Point(10,280)
-$labelDisclaimer.Size = New-Object System.Drawing.Size(420,40)
+$labelDisclaimer.Size = New-Object System.Drawing.Size(420,50)
 $labelDisclaimer.Text = "$screenshotDisclaimer"
 $form.Controls.Add($labelDisclaimer)
 
@@ -249,6 +249,10 @@ $emailEntry = $textEmail.Text
 
 if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     {
+    	## Confirmation box
+    	$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+	$wshell.Popup("Ticket Submitted Successfully!",5,"This box will close in 5 seconds",64+0)
+	
         #####################  CURRENTLY ONLY ABLE TO UPLOAD TO ASSET.  #####################
         ########  UNCOMMENT 'Upload-File' TO ENABLE UPLOADING SCREENSHOT TO ASSET  ##########
 
@@ -274,7 +278,8 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
          
         ## Delete screenshot
         Remove-Item "$screenshotPath/$screenshotName"
-
+	
+	
     }
 else 
     {

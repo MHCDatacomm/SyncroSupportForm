@@ -249,6 +249,10 @@ $emailEntry = $textEmail.Text
 
 if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     {
+    	## Confirmation box
+    	$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+	$wshell.Popup("Ticket Submitted Successfully!`n`nPlease check your email for updates`nand additional information.",10,"This box will close in 10 seconds",64+0)
+	
         #####################  CURRENTLY ONLY ABLE TO UPLOAD TO ASSET.  #####################
         ########  UNCOMMENT 'Upload-File' TO ENABLE UPLOADING SCREENSHOT TO ASSET  ##########
 

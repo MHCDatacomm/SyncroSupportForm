@@ -262,8 +262,8 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
         $ticketNumber = $ticketOutput.ticket.number
 	
 	## Confirmation box
-	$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-	$wshell.Popup("Ticket Submitted Successfully!`n`nPlease check your email for updates`nand additional information`nregarding your ticket, #$ticketNumber.",10,"This box will close in 10 seconds",64+0)
+        $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+        $wshell.Popup("Ticket Submitted Successfully!`n`nPlease check your email for updates`nand additional information`nregarding your ticket, #$ticketNumber.",10,"This box will close in 10 seconds",64+0)
     
         ## Take Screenshot
         $date = Get-Date -f yyyy-MM-dd
@@ -282,11 +282,13 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     }
 else 
     {
-        Write-Host 'Ticket Cancelled'
+        <#
+	Write-Host 'Testing Ticket Cancelled'
 	$cancelledTicket = 'Ticket Cancelled'
         ## Optionally write cancelled ticket event to Asset as Alert
         ## Comment next line to de-activate
-         Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry Cancelled a Support Request"
+        Rmm-Alert -Category "$cancelledTicket" -Body "User $nameEntry $emailEntry is Testing Cancelled a Support Request"
+	#>
     }
 
 exit
